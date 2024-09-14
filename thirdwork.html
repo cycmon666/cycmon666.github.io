@@ -1,0 +1,28 @@
+<head>
+...
+    <script>
+        let start = new Date();
+    </script>
+</head>
+<body>
+    <header>
+      ???
+    </header>
+    <div>
+        Y
+    </div>
+    <footer>
+      《《《
+    </footer>
+    <script>
+        let myHeight=window.innerHeight;
+        let myBody=document.body;
+        let myDiv = document.querySelector('div');
+        let rd=Math.floor(Math.random()*100);
+        let myHeader=document.querySelector('header');
+        myHeader.textContent=rd;
+        myBody.style.height=myHeight+'px';
+        console.log((new Date()-start) + "ms");
+        myDiv.textContent = (new Date()-start) + "ms";
+    </script>
+</body>
