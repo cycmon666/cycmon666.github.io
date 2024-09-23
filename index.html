@@ -53,19 +53,23 @@
       《《《
     </footer>
     <script>
-        function select(selector){
+         function select(selector){
             let dom=document.querySelector(selector);
             return dom;
         }//简化let readWord=document.querySelector('button#readWord')
         let readWord=select('button#readWord');
         let playWord=select('button#playWord');
-        let cet6String;
+        let cet6String='';
         readWord.onclick = function(){
             fetch('cet6.txt')
             .then(res => res.text())
             .then(txt => cet6String = txt);
+            select('p#en').textContent="已读入单词";
         };//读入本地文本文件cet6.txt
         playWord.onclick = function(){
+            if(cet6String==0){
+                select('p#cn').textContent="未读入数据";
+            }else{
             let qqq=cet6String.split('\r\n');//split分割字符串为数组
             let rand=Math.floor(Math.random()*qqq.length);
             let str = qqq[rand];
@@ -74,10 +78,11 @@
             let en=str.slice(0,begin);
             let pro=str.slice(begin+1,end);
             let cn=str.slice(end+1);
-            
+
             select('p#en').textContent=en;
             select('p#pro').textContent=pro;
-            select('p#cn').textContent=cn;
+            select('p#cn').textContent=cn;  
+            }
         };
         let myHeight=window.innerHeight;
         let myBody=document.body;
@@ -88,7 +93,6 @@
         myHeader.textContent=rd;
         myBody.style.height=myHeight+'px';
         myFooter.textContent = (new Date()-start) + "ms";
-
     </script>
 </body>
 </html>
