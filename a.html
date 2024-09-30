@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            border: 2px solid red;
+            margin: 0;
+        }
+        header{
+            height: 10%;
+            margin-left: 1%;
+            border: 1px solid rgb(0, 60, 255);
+            
+        }
+        div{
+            height:85%;
+            margin-right: 1%;
+            text-align:center;
+            background-color: deepskyblue;
+        }
+        p{
+            border: 2px solid rgb(215, 199, 199);
+        }
+        footer{
+            border: 0px;
+            height: 5%;
+        }
+        button{
+            font-size: 2 em;
+            padding: 0.5 em;
+        }
+    </style>
+    <script>
+        // console.time("start");
+        let start = new Date();
+    </script>
+</head>
+<body>
+    <header>
+      ???
+    </header>
+    <div>
+        <p id="en"></p>
+        <p id="pro"></p>
+        <p id="cn"></p>
+    </div>
+    <button id="readWord">读入单词</button>
+    <button id="playWord">随机单词</button>
+    <footer>
+      《《《
+    </footer>
+    <script>
+        function select(selector){
+            let dom=document.querySelector(selector);
+            return dom;
+        }//简化let readWord=document.querySelector('button#readWord')
+        let readWord=select('button#readWord');
+        let playWord=select('button#playWord');
+        let cet6String='';
+        readWord.onclick = function(){
+            fetch('cet6.txt')
+            .then(res => res.text())
+            .then(txt => cet6String = txt);
+            console.log("已读入");//控制台输出
+            select('p#en').textContent="已读入单词";
+        };//读入本地文本文件cet6.txt
+        playWord.onclick = function(){
+            if(cet6String==0){
+                select('p#cn').textContent="未读入数据";
+            }else{
+            let qqq=cet6String.split('\r\n');//split分割字符串为数组
+            let rand=Math.floor(Math.random()*qqq.length);
+            let str = qqq[rand];
+            //console.log(str);
+            let begin=str.indexOf('\t');//读取\t在字符串中位置
+            let end=str.lastIndexOf('\t');
+            let en=str.slice(0,begin);
+            let pro=str.slice(begin+1,end);
+            let cn=str.slice(end+1);
+
+            select('p#en').textContent=en;
+            select('p#pro').textContent=pro;
+            select('p#cn').textContent=cn;  
+            }
+            
+        };
+        let myHeight=window.innerHeight;
+        let myBody=document.body;
+        //let myBody=document.querySelector('body')
+        let myFooter = document.querySelector('footer');
+        let rd=Math.floor(Math.random()*100);
+        let myHeader=document.querySelector('header');
+        myHeader.textContent=rd;
+        myBody.style.height=myHeight+'px';
+        myFooter.textContent = (new Date()-start) + "ms";
+        // console.timeEnd("start");
+        // console.time("loop");
+        // {
+        //     let i=1;
+        //     while(i<1e5){
+        //         i++;
+        //     }
+        //     console.timeEnd("loop");
+        // }
+        // console.log(myHeight);
+        // console.log(myBody);
+        // console.log((new Date()-start) + "ms");
+    </script>
+</body>
+</html>
