@@ -23,7 +23,7 @@
     }
 </style>
 <script>
-     let Model = { } ;
+     let Model = new Object() ;
         Model.timerBegin  = new Date() ;
         Model.CET6 = [] ;
  {
@@ -39,6 +39,17 @@
     }
  }
    Model.pos = 0 ; //pos用于记录系统的当前单词
+   Model.users=[];
+   { //预读本地硬盘的用户信息
+            //假设本地localStorage对象的users属性存放用户信息
+            let str = localStorage.getItem('users') ;
+            if(str){
+             let users = JSON.parse(str) ;
+              Model.users = users ;
+            }
+            
+        }
+
    let UI = {} ; //UI用于表达和记录用户界面所有的内容
    UI.printWord = function(){
             let CET6 = Model.CET6 ;
@@ -67,7 +78,69 @@
     <p id="thr">
         vi.大量存在;(~in,~with)充满,富于
     </p>
-    <script>
+    <form>
+            <p>用户：<input type="text" name="user"/></p>
+            <p>密码：<input type="password" name="pass" /></p>
+            <button id = "signIn">
+               注册
+            </button>
+            <button id = "loginIn">
+               登录
+            </button>
+    </form>
+    <footer>
+        111
+    </footer>
+    <script>       
+        UI.form = select('form');
+        select('button#signIn').onclick = function(ev){
+            ev.preventDefault() ;
+            let users = Model.users ;
+            let userName = UI.form.user.value ;
+            let passWord = UI.form.pass.value ;
+            let user = {
+               userName: userName ,
+               passWord: passWord
+           } 
+           let exist = false ;
+           for(let u of users){
+             if(u.userName == userName){
+                exist = true ;
+                break ;
+             }
+           }
+           if(exist){
+             UI.log(userName + '已经存在， 注册不成功！') ;
+             console.log("1111")
+           }else{
+            UI.log(userName + '注册成功！') ;
+            console.log("1111")
+            users.push(user) ;
+           }
+        //所有在网络和磁盘IO的异步数据的传送，要用JSON字符串
+          let s = JSON.stringify(users) ;
+          localStorage.setItem('users', s) ;         
+        } ;
+        select('button#loginIn').onclick = function(ev){
+            ev.preventDefault() ;
+            let users = Model.users ;
+            let userName = UI.form.user.value ;
+            let passWord = UI.form.pass.value ;
+            
+           let success = false ;
+           for(let u of users){
+             if(u.userName === userName && u.passWord === passWord){
+                success = true ;
+                break ;
+             }
+           }
+           if(success){
+             UI.log(userName + '成功登录！') ;
+             UI.form.style.display = 'none' ;
+           }else{
+            UI.log(userName + '登录不成功，请查看用户名和密码！') ;            
+           }       
+        } ; 
        select('button#readWord').onclick = function(){
            Model.pos = 0 ;
            UI.printWord() ;
