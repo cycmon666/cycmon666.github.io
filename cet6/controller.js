@@ -1,4 +1,6 @@
-     UI.form = select('form');
+       UI.form = select('form');
+     UI.nav = select('nav');
+     UI.main = select('main');
        /**
          *异步代码开始，用于用户UI的交互控制（按钮点击事件） 
          * 
@@ -49,6 +51,8 @@
              }
            }
            if(success &&  Model.CET6.length > 5000 ){
+               UI.nav.style.display = 'inline';
+               UI.main.style.display = 'inline';
              UI.log(userName + '成功登录！') ;
              Model.user = userName ;
              UI.form.style.display = 'none' ;
@@ -84,26 +88,32 @@
         //为页面上DOM元素（四个按钮），设置点击程序的功能
         select('button#firstWord').onclick = function(){
            Model.pos = 0 ;
-           UI.printWord() ;
-           
+           let learning = [] ;
+                  for(let i=0;i < Model.numOfLearning ; i++){
+                    let rand = Math.floor(Math.random() * Model.CET6.length ) ;
+                    let word = Model.CET6[rand] ;
+                        word.sn = rand ;
+                    learning.push(word) ;
+                    
+                   }
+            Model.learning =  learning ;//生成随机单词
+           UI.printWord() ; 
         } 
 
-    
-        select('button#nextWord').onclick = function(){
+        select('button#nextWord').onclick = function nextWord(){
            if( Model.pos < Model.learning.length -1){
                 Model.pos ++ ;
+                UI.printWord() ;
+                UI.response('继续');
             }else{
-                Model.pos = 0 ;
-            }
                UI.printWord() ;
-               UI.response('加油，继续吧！');
-              
+               UI.response('已是本组最后单词');
+            }          
         } 
 
         select('button#lastWord').onclick = function(){
             Model.pos = Model.learning.length - 1  ;
-            UI.printWord() ;
-           
+            UI.printWord() ; 
         }
         /***
          *  5个中文选项的动态代码，记录用户是否认识本单词
@@ -118,11 +128,12 @@
                UI.response("答对了!");
                Model.learning[pos].level -- ;
                this.className += ' right' ;
+               setTimeout(() =>{select('button#nextWord').click()},1000); 
             }else{
                UI.response("答错了!");
                Model.learning[pos].level ++ ;
                this.className += ' wrong' ;
-            }
+            }     
         }
      }
 
@@ -145,9 +156,6 @@
                     learned.push(l) ;
                   } 
                 }
-             let str = JSON.stringify(learned);
-             localStorage.setItem(Model.user+'-learned' ,str) ;
-            
           }else{
              learned = [] ;
              for(let w of Model.learning){
@@ -155,21 +163,39 @@
                 l.sn = w.sn ;
                 l.level = w.level ;
                 learned.push(l) ;
-             }
-             let str = JSON.stringify(learned) ;
-             localStorage.setItem(Model.user+'-learned', str) ;
-            
+             }   
           }
+          let str = JSON.stringify(learned) ;
+          localStorage.setItem(Model.user+'-learned', str) ;
           UI.log("您曾学习的单词总数为： " + learned.length + " 个！" ) ;
         }else{
             UI.log('本组单词还未背完，不能存储学习进度！') ;
         }
+       
      };//saveWord 结束
  
      select('button#reviewWord').onclick = function(){
-      
       let learned = Model.learned ;
       if(learned.length >= 2 * Model.numOfLearning){
+         let a=0,b=0,c=0;
+         for(let word of Model.learned){  
+            if(word.level==0){
+               a++;
+             }else if(word.level<3){
+               b++;
+             }else{
+               c++;
+             }
+             word.timer=new Date();
+             let year=Math.random()>0.5?2023:2024;
+             let month=Math.floor(12*Math.random())
+             let date=Math.floor(31*Math.random())
+             let t= new Date(year,month,date)
+             word.timer=t;
+
+         }
+       UI.response("熟悉单词数："+a+"知道单词数："+b+"陌生单词数："+c);
+       setTimeout(() =>{UI.response("正在复习")},10*1000) ;    
        Model.learning = [] ;
        let randLearned = function(){
           let rand = Math.floor(Math.random() * learned.length) ;
@@ -188,12 +214,17 @@
              let cn = Model.CET6[word.sn].cn ;
              word.cn = cn ; word.en = en ; word.pn = pn ;
              Model.learning.push(word) ;
+             Model.learning.timer = new Date();
+             let year=Math.random()>0.5?2023:2024;
+             let month=Math.floor(12*Math.random())
+             let date=Math.floor(31*Math.random())
+             let t= new Date(year,month,date)
+             Model.learning.timer =t;
           }
       }
       Model.pos = 0 ;
       Model.numOfLearning = Model.learning.length ;
-      UI.printWord() ;
-      UI.response('复习'+ Model.learning.length +'个单词！');
+      UI.printWord() ;  
     }else{
         UI.log('您没背2组单词，无法进入复习环节！') ;
     }
