@@ -1,4 +1,4 @@
-   *{
+  *{
         margin: 0;
         box-sizing: border-box;
         text-align: center;
@@ -13,11 +13,14 @@
      display: flex;
      flex-direction: column;
      margin: 0; 
+     background-color:aliceblue
     }
-    header{font-size: 2em;
-           height: 15% ;
-           width: 100vw;
-           position: relative;
+    header{
+        margin-top: 5vh;
+        font-size: 2em;
+        height: 15% ;
+        width: 100vw;
+        position: relative;
     }
     .top {
         display: flex;
@@ -63,9 +66,12 @@
         color:lightseagreen;
        }
     form{
-        top: 10% ;
+        margin-top: 10vh;
         flex: 1;         
         font-size: 1.1em ;
+    }
+    form p{
+        margin-top: 0.5vh;
     }
     form input{
         font-size: 1.1em ;
@@ -73,12 +79,17 @@
     }
     form button{
         font-size: 1.3rem ;
-        margin-right: 1em;
         margin: 0.5vh;
+        background-color: azure;
+        border-radius: 10%;
+        border: 2px solid rgb(105, 196, 196);
+        transition-duration: 0.4s;
+    }
+    form button:hover{
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     }
     footer{
         width: 100vw;
-        height: 20% ;
         font-size:1.2em;
     }
     span#level{
@@ -122,4 +133,4 @@
         padding: 5px 10px;
         text-align: right;
         border-radius: 3%;
-    }  
+    }
